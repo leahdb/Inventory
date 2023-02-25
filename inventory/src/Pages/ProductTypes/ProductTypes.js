@@ -1,8 +1,8 @@
 import React from "react";
-import ProductTypes from "./Pages/ProductTypes/ProductTypes";
-import "./App.scss";
+import "./ProductTypes.scss";
+import InventoryTable from "../../Components/InventoryTable/InventoryTable";
 
-function App() {
+function ProductTypes() {
   const data = [
     {
       id: 1,
@@ -41,10 +41,13 @@ function App() {
     },
   ];
   return (
-    <div className="App">
-      <ProductTypes data={data} />
-    </div>
+    <>
+      <div className="container">
+        <h1 className="py-5">Product Types</h1>
+        <InventoryTable data={data} />
+      </div>
+    </>
   );
 }
 
-export default App;
+export default ProductTypes;

@@ -57,7 +57,7 @@ function InventoryTable(props) {
             </svg>
           </button>
         </div>
-        <div className="col-6 p-0 d-flex justify-content-end">
+        <div className="col-6 p-0 d-flex justify-content-end align-items-center">
           <input type="text" placeholder="Enter product type name" />
           <button className="p-0">
             <svg
