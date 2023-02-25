@@ -1,0 +1,111 @@
+$body: white;
+$thead: #F7F7F7;
+$dark-blue: #00426B;
+$dark-gray: #707070;
+$lign: #E0E0E0;
+
+$gl-ms: "screen and (max-width: 23.5em)"; 
+$gl-xs: "screen and (max-width: 35.5em)"; 
+$gl-sm: "screen and (max-width: 48em)";
+$gl-md: "screen and (max-width: 64em)";   
+$gl-lg: "screen and (max-width: 80em)";   
+
+.table{ 
+  background:$body;
+  border-radius: 10px; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  button{
+    background: none;
+    border: none;
+  }
+
+  input{
+    height: 50px;
+    font-size: 24px;
+  }
+}
+
+table{ 
+  border-spacing: 1; 
+  border-collapse: collapse; 
+  background:white;
+  border-radius:6px;
+  overflow:hidden;
+  width:100%;
+  margin:0 auto;
+  position:relative;
+
+  *{ 
+    position:relative; 
+    }
+  
+  td,th{ 
+    padding-left:8px;
+    text-align: center !important;
+    }
+
+  thead tr{ 
+    height:90px;
+    background: $thead;
+    font-size:28px;
+    font-weight: bold;
+    color: $dark-blue;
+    
+  }
+  
+  tbody tr{ 
+    height:48px; 
+    border-bottom:1px solid $lign ;
+    color: $dark-gray;
+    font-size: 24px;
+    font-weight: 500;
+    &:last-child{ border:0 }
+    &:hover { background-color: $thead }
+    img{
+        max-height: 150px;
+    }
+    
+    
+  }
+
+}
+
+
+@media #{$gl-xs}{
+  
+  table{ display:block;
+	  > *,tr,td,th{ 
+        display:block 
+    }
+    
+    thead{ 
+        display:none 
+    }
+    tbody tr{ 
+        height:auto; 
+        padding:8px 0;
+        td{ 
+            padding-left:45%; 
+            margin-bottom:12px;
+            &:last-child{ 
+                margin-bottom:0 
+            }
+            &:before{ 
+                position:absolute;
+                font-weight:700;
+                width:40%;
+                left:10px;
+                top:0
+            }
+        
+            &:nth-child(1):before { content:"Code";}
+            &:nth-child(2):before { content:"Stock";}
+            &:nth-child(3):before { content:"Cap";}
+            &:nth-child(4):before { content:"Inch";}
+            &:nth-child(5):before { content:"Box Type";}
+      }        
+    }
+  }
+}  	
+

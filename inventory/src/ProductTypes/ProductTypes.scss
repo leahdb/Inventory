@@ -1,0 +1,14 @@
+$background: #F7F7F7;
+$dark-blue: #00426B;
+
+body{
+    background-color: $background !important;
+}
+
+h1{
+    font-size: 40px;
+    text-align: left;
+    color: $dark-blue;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold !important;
+}
