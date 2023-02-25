@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import "./ItemsTable.scss";
 import AddItemPopup from "../AddItemPopup/AddItemPopup";
 
 function ItemsTable(props) {
+    const [data, setData] = useState(props.data);
+    const handleSoldChange = (event, itemId) => {
+      const updatedData = props.data.map((item) => {
+        if (item.id === itemId) {
+          return { ...item, sold: event.target.checked };
+        }
+        return item;
+      });
+      setData(updatedData);
+    };
   return (
     <>
       <div className="row d-flex justify-content-between table p-5">
@@ -58,7 +68,7 @@ function ItemsTable(props) {
           </button>
         </div>
         <div className="col-6 p-0 d-flex justify-content-end align-items-center">
-          <input type="text" placeholder="Enter product type name" />
+          <input type="text" placeholder="Enter item Serial No." />
           <button className="p-0">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -101,21 +111,24 @@ function ItemsTable(props) {
             <thead>
               <tr>
                 <th>Type ID</th>
-                <th>Name</th>
-                <th>Image</th>
-                <th>Counts</th>
+                <th>Serial No.</th>
+                <th>SOLD</th>
                 <th>Tools</th>
               </tr>
             </thead>
             <tbody>
-              {props.data.map((item) => (
+              {data.map((item) => (
                 <tr key={item.id}>
                   <td>{item.id}</td>
-                  <td>{item.name}</td>
+                  <td>{item.serial}</td>
                   <td>
-                    <img src={item.image} alt={item.name} />
+                    <input
+                      type="checkbox"
+                      className="check"
+                      checked={item.sold}
+                      onChange={(event) => handleSoldChange(event, item.id)}
+                    />
                   </td>
-                  <td>{item.counts}</td>
                   <td>
                     <button>
                       <svg
