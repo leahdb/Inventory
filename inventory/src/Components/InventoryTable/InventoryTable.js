@@ -2,7 +2,9 @@ import React from "react";
 import "./InventoryTable.scss";
 import AddTypePopup from "../AddTypePopup/AddTypePopup";
 import EditTypePopup from "../EditTypePopup/EditTypePopup";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 
 function InventoryTable(props) {
 
@@ -12,6 +14,15 @@ function InventoryTable(props) {
     navigate(`/items/${id}/${name}`);
     localStorage.setItem("name", name);
   };
+
+  axios
+    .get("http://localhost:8000/api/types")
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   return (
     <>
       <div className="row d-flex justify-content-between table p-5">
