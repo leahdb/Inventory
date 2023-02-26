@@ -3,6 +3,7 @@ import "./Items.scss";
 import ItemsTable from "../../Components/ItemsTable/ItemsTable";
 
 function Items() {
+  const name = localStorage.getItem("name");
   const data = [
     {
       id: 1,
@@ -24,7 +25,7 @@ function Items() {
   return (
     <>
       <div className="container">
-        <h1 className="py-5">Bla Items</h1>
+        <h1 className="py-5">{name} Items</h1>
         <ItemsTable data={data} />
       </div>
     </>

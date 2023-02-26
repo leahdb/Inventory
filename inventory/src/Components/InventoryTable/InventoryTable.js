@@ -2,14 +2,15 @@ import React from "react";
 import "./InventoryTable.scss";
 import AddTypePopup from "../AddTypePopup/AddTypePopup";
 import EditTypePopup from "../EditTypePopup/EditTypePopup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function InventoryTable(props) {
 
   const navigate = useNavigate();
 
-  const handleRowClick = (event) => {
-    navigate("/bla");
+  const handleRowClick = (id, name) => {
+    navigate(`/items/${id}/${name}`);
+    localStorage.setItem("name", name);
   };
   return (
     <>
@@ -118,12 +119,18 @@ function InventoryTable(props) {
             <tbody>
               {props.data.map((item) => (
                 <tr key={item.id}>
-                  <td onClick={handleRowClick}>{item.id}</td>
-                  <td onClick={handleRowClick}>{item.name}</td>
-                  <td onClick={handleRowClick}>
+                  <td onClick={() => handleRowClick(item.id, item.name)}>
+                    {item.id}
+                  </td>
+                  <td onClick={() => handleRowClick(item.id, item.name)}>
+                    {item.name}
+                  </td>
+                  <td onClick={() => handleRowClick(item.id, item.name)}>
                     <img src={item.image} alt={item.name} />
                   </td>
-                  <td onClick={handleRowClick}>{item.counts}</td>
+                  <td onClick={() => handleRowClick(item.id, item.name)}>
+                    {item.counts}
+                  </td>
                   <td>
                     <button data-bs-toggle="modal" data-bs-target="#editType">
                       <svg

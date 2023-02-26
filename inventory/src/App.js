@@ -9,7 +9,7 @@ export default function App() {
   return (
     <Routes>
       <Route exact path="/" element={<ProductTypes />} />
-      <Route exact path="bla" element={<Items />} />
+      <Route path="/items/:id/:type" element={<Items />} />
     </Routes>
   );
 }
