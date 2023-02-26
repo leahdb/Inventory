@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./InventoryTable.scss";
 import AddTypePopup from "../AddTypePopup/AddTypePopup";
 import EditTypePopup from "../EditTypePopup/EditTypePopup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
-function InventoryTable(props) {
+function InventoryTable() {
+  const [id, setId] = useState([]);
+  const [name, setName] = useState([]);
+  const [image, setImage] = useState([]);
+  const [count, setCount] = useState([]);
+  const [noData, setNoData] = useState(false);
+  const [entries, setEntries] = useState([]);
+  const [types, setTypes] = useState([]);
 
   const navigate = useNavigate();
 
@@ -15,14 +21,35 @@ function InventoryTable(props) {
     localStorage.setItem("name", name);
   };
 
-  axios
-    .get("http://localhost:8000/api/types")
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
+  const search = async () => {
+    try {
+      const result = await axios.get(
+        `http://localhost:8000/api/types?search=${name}`
+      );
+      console.log(result.data);
+      setEntries = result.data;
+      if (result.data.length === 0) {
+        setNoData(true);
+        // setIsPicked(false);
+      } else {
+        for (let i = 0; i < result.data.length; i++) {
+          setId(result.data[i].id);
+          setName(result.data[i].name);
+          setImage(result.data[i].driver_score);
+        }
+        // setIsPicked(true);
+        setNoData(false);
+      }
+    } catch (error) {
       console.log(error);
-    });
+    }
+  };
+
+  useEffect(() => {
+    setCount(34);
+    console.log(count);
+  }, []);
+
   return (
     <>
       <div className="row d-flex justify-content-between table p-5">
@@ -79,7 +106,7 @@ function InventoryTable(props) {
         </div>
         <div className="col-6 p-0 d-flex justify-content-end align-items-center">
           <input type="text" placeholder="Enter product type name" />
-          <button className="p-0">
+          <button className="p-0" onClick={() => search()}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="126"
@@ -117,6 +144,11 @@ function InventoryTable(props) {
           </button>
         </div>
         <div className="col-12 pt-5">
+          {noData && (
+            <div className="container main-container d-flex justify-content-center">
+              <h2>no Data</h2>
+            </div>
+          )}
           <table>
             <thead>
               <tr>
@@ -128,153 +160,59 @@ function InventoryTable(props) {
               </tr>
             </thead>
             <tbody>
-              {props.data.map((item) => (
-                <tr key={item.id}>
-                  <td onClick={() => handleRowClick(item.id, item.name)}>
-                    {item.id}
-                  </td>
-                  <td onClick={() => handleRowClick(item.id, item.name)}>
-                    {item.name}
-                  </td>
-                  <td onClick={() => handleRowClick(item.id, item.name)}>
-                    <img src={item.image} alt={item.name} />
-                  </td>
-                  <td onClick={() => handleRowClick(item.id, item.name)}>
-                    {item.counts}
-                  </td>
-                  <td>
-                    <button data-bs-toggle="modal" data-bs-target="#editType">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="90"
-                        height="55"
-                        viewBox="0 0 90 55"
-                      >
-                        <g
-                          id="Edit_Button"
-                          data-name="Edit Button"
-                          transform="translate(-1406 -574)"
+              {types &&
+                types.map((type) => (
+                  <tr key={type.id}>
+                    <td onClick={() => handleRowClick(type.id, type.name)}>
+                      {type.ID}
+                    </td>
+                    <td onClick={() => handleRowClick(type.id, type.name)}>
+                      {type.Name}
+                    </td>
+                    <td onClick={() => handleRowClick(type.id, type.name)}>
+                      {/* <img src={type.image} alt={type.name} /> */}
+                    </td>
+                    <td onClick={() => handleRowClick(type.id, type.name)}>
+                      {/* {type.counts} */}
+                    </td>
+                    <td>
+                      <button data-bs-toggle="modal" data-bs-target="#editType">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="90"
+                          height="55"
+                          viewBox="0 0 90 55"
                         >
-                          <rect
-                            id="Rectangle_7"
-                            data-name="Rectangle 7"
-                            width="90"
-                            height="55"
-                            rx="5"
-                            transform="translate(1406 574)"
-                            fill="#ffcd00"
-                          />
-                          <text
-                            id="Edit"
-                            transform="translate(1441 612)"
-                            fill="#fff"
-                            font-size="26"
-                            font-family="SegoeUI-Semibold, Segoe UI"
-                            font-weight="600"
-                          >
-                            <tspan x="0" y="0">
-                              Edit
-                            </tspan>
-                          </text>
-                          <path
-                            id="edit-1-svgrepo-com"
-                            d="M12.5,4.005H6.124A2.124,2.124,0,0,0,4,6.13V18.876A2.124,2.124,0,0,0,6.124,21H18.87a2.124,2.124,0,0,0,2.124-2.124V12.5M19.31,8.694l1.153-1.153a2.124,2.124,0,1,0-3-3L16.306,5.69m3,3L12.9,15.106a2.124,2.124,0,0,1-1.085.581l-3.125.625.625-3.125A2.124,2.124,0,0,1,9.895,12.1L16.306,5.69m3,3-3-3"
-                            transform="translate(1412.164 591.041)"
-                            fill="none"
-                            stroke="#fff"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2.7"
-                          />
-                        </g>
-                      </svg>
-                    </button>
-                    <button>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="118"
-                        height="55"
-                        viewBox="0 0 118 55"
-                      >
-                        <g
-                          id="Delete_Button"
-                          data-name="Delete Button"
-                          transform="translate(-1506 -574)"
-                        >
-                          <rect
-                            id="Rectangle_6"
-                            data-name="Rectangle 6"
-                            width="118"
-                            height="55"
-                            rx="5"
-                            transform="translate(1506 574)"
-                            fill="red"
-                          />
-                          <text
-                            id="Delete"
-                            transform="translate(1538 612)"
-                            fill="#fff"
-                            font-size="26"
-                            font-family="SegoeUI-Semibold, Segoe UI"
-                            font-weight="600"
-                          >
-                            <tspan x="0" y="0">
-                              Delete
-                            </tspan>
-                          </text>
                           <g
-                            id="delete-svgrepo-com"
-                            transform="translate(1512 590.635)"
+                            id="Edit_Button"
+                            data-name="Edit Button"
+                            transform="translate(-1406 -574)"
                           >
-                            <path
-                              id="Path_3"
-                              data-name="Path 3"
-                              d="M10,11v6.469"
-                              transform="translate(0.469 0.625)"
-                              fill="none"
-                              stroke="#fff"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2.7"
+                            <rect
+                              id="Rectangle_7"
+                              data-name="Rectangle 7"
+                              width="90"
+                              height="55"
+                              rx="5"
+                              transform="translate(1406 574)"
+                              fill="#ffcd00"
                             />
+                            <text
+                              id="Edit"
+                              transform="translate(1441 612)"
+                              fill="#fff"
+                              font-size="26"
+                              font-family="SegoeUI-Semibold, Segoe UI"
+                              font-weight="600"
+                            >
+                              <tspan x="0" y="0">
+                                Edit
+                              </tspan>
+                            </text>
                             <path
-                              id="Path_4"
-                              data-name="Path 4"
-                              d="M14,11v6.469"
-                              transform="translate(0.781 0.625)"
-                              fill="none"
-                              stroke="#fff"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2.7"
-                            />
-                            <path
-                              id="Path_5"
-                              data-name="Path 5"
-                              d="M4,7H21.25"
-                              transform="translate(0 0.312)"
-                              fill="none"
-                              stroke="#fff"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2.7"
-                            />
-                            <path
-                              id="Path_6"
-                              data-name="Path 6"
-                              d="M6,7H18.938V18.859A3.234,3.234,0,0,1,15.7,22.094H9.234A3.234,3.234,0,0,1,6,18.859Z"
-                              transform="translate(0.156 0.313)"
-                              fill="none"
-                              stroke="#fff"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2.7"
-                            />
-                            <path
-                              id="Path_7"
-                              data-name="Path 7"
-                              d="M9,5.156A2.156,2.156,0,0,1,11.156,3h2.156a2.156,2.156,0,0,1,2.156,2.156V7.313H9Z"
-                              transform="translate(0.391)"
+                              id="edit-1-svgrepo-com"
+                              d="M12.5,4.005H6.124A2.124,2.124,0,0,0,4,6.13V18.876A2.124,2.124,0,0,0,6.124,21H18.87a2.124,2.124,0,0,0,2.124-2.124V12.5M19.31,8.694l1.153-1.153a2.124,2.124,0,1,0-3-3L16.306,5.69m3,3L12.9,15.106a2.124,2.124,0,0,1-1.085.581l-3.125.625.625-3.125A2.124,2.124,0,0,1,9.895,12.1L16.306,5.69m3,3-3-3"
+                              transform="translate(1412.164 591.041)"
                               fill="none"
                               stroke="#fff"
                               stroke-linecap="round"
@@ -282,12 +220,107 @@ function InventoryTable(props) {
                               stroke-width="2.7"
                             />
                           </g>
-                        </g>
-                      </svg>
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                        </svg>
+                      </button>
+                      <button>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="118"
+                          height="55"
+                          viewBox="0 0 118 55"
+                        >
+                          <g
+                            id="Delete_Button"
+                            data-name="Delete Button"
+                            transform="translate(-1506 -574)"
+                          >
+                            <rect
+                              id="Rectangle_6"
+                              data-name="Rectangle 6"
+                              width="118"
+                              height="55"
+                              rx="5"
+                              transform="translate(1506 574)"
+                              fill="red"
+                            />
+                            <text
+                              id="Delete"
+                              transform="translate(1538 612)"
+                              fill="#fff"
+                              font-size="26"
+                              font-family="SegoeUI-Semibold, Segoe UI"
+                              font-weight="600"
+                            >
+                              <tspan x="0" y="0">
+                                Delete
+                              </tspan>
+                            </text>
+                            <g
+                              id="delete-svgrepo-com"
+                              transform="translate(1512 590.635)"
+                            >
+                              <path
+                                id="Path_3"
+                                data-name="Path 3"
+                                d="M10,11v6.469"
+                                transform="translate(0.469 0.625)"
+                                fill="none"
+                                stroke="#fff"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2.7"
+                              />
+                              <path
+                                id="Path_4"
+                                data-name="Path 4"
+                                d="M14,11v6.469"
+                                transform="translate(0.781 0.625)"
+                                fill="none"
+                                stroke="#fff"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2.7"
+                              />
+                              <path
+                                id="Path_5"
+                                data-name="Path 5"
+                                d="M4,7H21.25"
+                                transform="translate(0 0.312)"
+                                fill="none"
+                                stroke="#fff"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2.7"
+                              />
+                              <path
+                                id="Path_6"
+                                data-name="Path 6"
+                                d="M6,7H18.938V18.859A3.234,3.234,0,0,1,15.7,22.094H9.234A3.234,3.234,0,0,1,6,18.859Z"
+                                transform="translate(0.156 0.313)"
+                                fill="none"
+                                stroke="#fff"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2.7"
+                              />
+                              <path
+                                id="Path_7"
+                                data-name="Path 7"
+                                d="M9,5.156A2.156,2.156,0,0,1,11.156,3h2.156a2.156,2.156,0,0,1,2.156,2.156V7.313H9Z"
+                                transform="translate(0.391)"
+                                fill="none"
+                                stroke="#fff"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2.7"
+                              />
+                            </g>
+                          </g>
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
