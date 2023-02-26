@@ -32,6 +32,20 @@ function InventoryTable() {
   };
 
 
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:8000/api/types/${id}`)
+      .then((response) => {
+        const updatedTypes = types.filter((type) => type.Id !== id);
+        setTypes(updatedTypes);
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+
   useEffect(() => {
     axios
       .get("http://localhost:8000/api/types")
@@ -158,18 +172,18 @@ function InventoryTable() {
             <tbody>
               {types &&
                 types.map((type) => (
-                  <tr key={type.Id}>
-                    <td onClick={() => handleRowClick(type.Id, type.Name)}>
+                  <tr key={type.ID}>
+                    <td onClick={() => handleRowClick(type.ID, type.Name)}>
                       {type.ID}
                     </td>
-                    <td onClick={() => handleRowClick(type.Id, type.Name)}>
+                    <td onClick={() => handleRowClick(type.ID, type.Name)}>
                       {type.Name}
                     </td>
-                    <td onClick={() => handleRowClick(type.Id, type.Name)}>
+                    <td onClick={() => handleRowClick(type.ID, type.Name)}>
                       <img src={type.Image} alt={type.Name} />
                     </td>
-                    <td onClick={() => handleRowClick(type.Id, type.Name)}>
-                      {type.Counts}
+                    <td onClick={() => handleRowClick(type.ID, type.Name)}>
+                      {type.count}
                     </td>
                     <td>
                       <button data-bs-toggle="modal" data-bs-target="#editType">
@@ -218,7 +232,7 @@ function InventoryTable() {
                           </g>
                         </svg>
                       </button>
-                      <button>
+                      <button onClick={() => handleDelete(type.ID)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="118"

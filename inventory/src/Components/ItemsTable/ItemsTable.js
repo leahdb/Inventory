@@ -5,43 +5,42 @@ import EditItemPopup from "../EditItemPopup/EditItemPopup";
 import axios from "axios";
 
 function ItemsTable(props) {
+  const [items, setItems] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
-    const [items, setItems] = useState([]);
-    const [searchQuery, setSearchQuery] = useState("");
+  const handleSoldChange = (event, itemId) => {
+    const updatedData = props.data.map((item) => {
+      if (item.id === itemId) {
+        return { ...item, sold: event.target.checked };
+      }
+      return item;
+    });
+    setItems(updatedData);
+  };
 
-    const handleSoldChange = (event, itemId) => {
-      const updatedData = props.data.map((item) => {
-        if (item.id === itemId) {
-          return { ...item, sold: event.target.checked };
-        }
-        return item;
+  const handleSearchInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = async (event) => {
+    event.preventDefault();
+    const response = await axios.get(
+      `http://localhost:8000/api/items?search=${searchQuery}`
+    );
+    setItems(response.data.data);
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/api/items")
+      .then((response) => {
+        setItems(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
-      setItems(updatedData);
-    };
-
-    const handleSearchInputChange = (event) => {
-      setSearchQuery(event.target.value);
-    };
-
-    const handleSearchSubmit = async (event) => {
-      event.preventDefault();
-      const response = await axios.get(
-        `http://localhost:8000/api/items?search=${searchQuery}`
-      );
-      setItems(response.data.data);
-    };
-
-    useEffect(() => {
-      axios
-        .get("http://localhost:8000/api/items")
-        .then((response) => {
-          setItems(response.data.data);
-          console.log(response.data.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }, []);
+  }, []);
 
   return (
     <>
@@ -98,49 +97,56 @@ function ItemsTable(props) {
           </button>
         </div>
         <div className="col-6 p-0 d-flex justify-content-end align-items-center">
-          <input type="text" placeholder="Enter item Serial No." />
-          <button className="p-0">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="126"
-              height="62"
-              viewBox="0 0 126 62"
-            >
-              <g
-                id="Search_Button"
-                data-name="Search Button"
-                transform="translate(-1516 -300)"
+          <form onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              placeholder="Enter item Serial No."
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+            />
+            <button className="p-0" type="submit">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="126"
+                height="62"
+                viewBox="0 0 126 62"
               >
-                <rect
-                  id="Rectangle_3"
-                  data-name="Rectangle 3"
-                  width="126"
-                  height="62"
-                  rx="5"
-                  transform="translate(1516 300)"
-                  fill="#00426b"
-                />
-                <text
-                  id="Search"
-                  transform="translate(1534 343)"
-                  fill="#ffcd00"
-                  font-size="30"
-                  font-family="SegoeUI-Semibold, Segoe UI"
-                  font-weight="600"
+                <g
+                  id="Search_Button"
+                  data-name="Search Button"
+                  transform="translate(-1516 -300)"
                 >
-                  <tspan x="0" y="0">
-                    Search
-                  </tspan>
-                </text>
-              </g>
-            </svg>
-          </button>
+                  <rect
+                    id="Rectangle_3"
+                    data-name="Rectangle 3"
+                    width="126"
+                    height="62"
+                    rx="5"
+                    transform="translate(1516 300)"
+                    fill="#00426b"
+                  />
+                  <text
+                    id="Search"
+                    transform="translate(1534 343)"
+                    fill="#ffcd00"
+                    font-size="30"
+                    font-family="SegoeUI-Semibold, Segoe UI"
+                    font-weight="600"
+                  >
+                    <tspan x="0" y="0">
+                      Search
+                    </tspan>
+                  </text>
+                </g>
+              </svg>
+            </button>
+          </form>
         </div>
         <div className="col-12 pt-5">
           <table>
             <thead>
               <tr>
-                <th>Type ID</th>
+                <th>Item ID</th>
                 <th>Serial No.</th>
                 <th>SOLD</th>
                 <th>Tools</th>

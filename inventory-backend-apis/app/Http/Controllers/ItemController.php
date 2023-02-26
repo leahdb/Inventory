@@ -61,8 +61,10 @@ class ItemController extends Controller
             return response()->json(['error' => 'Item not found'], 404);
         }
 
-        $item->delete();
+        Item::destroy($id);
 
-        return response()->json(['success' => 'Item deleted successfully'], 200);
+        //$item->delete();
+
+        return response()->json(['success' => 'Item delete successfully'], 200);
     }
 }

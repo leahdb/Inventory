@@ -52,7 +52,7 @@ function AddTypePopup() {
             <div className="modal-body">
               <form onSubmit={handleFormSubmit}>
                 <div
-                  className="image mb-3 p-4"
+                  className="image mb-3 p-4 d-flex justify-content-center"
                   onClick={() => fileSelect.current?.click()}
                 >
                   {image ? (

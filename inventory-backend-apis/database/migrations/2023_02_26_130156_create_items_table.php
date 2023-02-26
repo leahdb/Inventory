@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_type_id');
             $table->string('serial');
             $table->boolean('sold');
-            $table->foreign('product_type_id')->references('id')->on('producttypes')->onDelete('cascade');
+            $table->foreign('product_type_id')->references('id')->on('product_types')->onDelete('cascade');
             $table->timestamps(false);
         });
     }
