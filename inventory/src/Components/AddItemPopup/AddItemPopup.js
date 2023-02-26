@@ -24,7 +24,7 @@ function AddTypePopup() {
 
   return (
     <>
-      <div className="modal" id="exampleModal">
+      <div className="modal" id="addItem">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">

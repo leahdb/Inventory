@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./ItemsTable.scss";
 import AddItemPopup from "../AddItemPopup/AddItemPopup";
+import EditItemPopup from "../EditItemPopup/EditItemPopup";
 
 function ItemsTable(props) {
     const [data, setData] = useState(props.data);
@@ -20,7 +21,7 @@ function ItemsTable(props) {
           <button
             type="button"
             data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
+            data-bs-target="#addItem"
             className="p-0"
           >
             <svg
@@ -130,7 +131,7 @@ function ItemsTable(props) {
                     />
                   </td>
                   <td>
-                    <button>
+                    <button data-bs-toggle="modal" data-bs-target="#editItem">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="90"
@@ -280,6 +281,7 @@ function ItemsTable(props) {
         </div>
       </div>
       <AddItemPopup />
+      <EditItemPopup />
     </>
   );
 }

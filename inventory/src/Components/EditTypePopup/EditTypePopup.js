@@ -1,5 +1,5 @@
 import React, { useState , useRef } from "react";
-import "./AddTypePopup.scss";
+import "./EditTypePopup.scss";
 
 function AddTypePopup() {
   const [name, setName] = useState("");
@@ -18,11 +18,11 @@ function AddTypePopup() {
   };
   return (
     <>
-      <div className="modal" id="exampleModal">
+      <div className="modal" id="editType">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 class="modal-title">Add Product Type</h5>
+              <h5 class="modal-title">Edit Product Type</h5>
               <button
                 type="button"
                 class="btn-close"
@@ -166,7 +166,7 @@ function AddTypePopup() {
                     font-weight="600"
                   >
                     <tspan x="0" y="0">
-                      Add
+                      Edit
                     </tspan>
                   </text>
                 </svg>
