@@ -6,13 +6,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function InventoryTable() {
-  const [id, setId] = useState([]);
-  const [name, setName] = useState([]);
-  const [image, setImage] = useState([]);
-  const [count, setCount] = useState([]);
-  const [noData, setNoData] = useState(false);
-  const [entries, setEntries] = useState([]);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState(null);
   const [types, setTypes] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
 
@@ -21,33 +19,29 @@ function InventoryTable() {
     localStorage.setItem("name", name);
   };
 
-  const search = async () => {
-    try {
-      const result = await axios.get(
-        `http://localhost:8000/api/types?search=${name}`
-      );
-      console.log(result.data);
-      setEntries = result.data;
-      if (result.data.length === 0) {
-        setNoData(true);
-        // setIsPicked(false);
-      } else {
-        for (let i = 0; i < result.data.length; i++) {
-          setId(result.data[i].id);
-          setName(result.data[i].name);
-          setImage(result.data[i].driver_score);
-        }
-        // setIsPicked(true);
-        setNoData(false);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const handleSearchInputChange = (event) => {
+    setSearchQuery(event.target.value);
   };
 
+  const handleSearchSubmit = async (event) => {
+    event.preventDefault();
+    const response = await axios.get(
+      `http://localhost:8000/api/types?search=${searchQuery}`
+    );
+    setTypes(response.data.data);
+  };
+
+
   useEffect(() => {
-    setCount(34);
-    console.log(count);
+    axios
+      .get("http://localhost:8000/api/types")
+      .then((response) => {
+        setTypes(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   return (
@@ -105,50 +99,52 @@ function InventoryTable() {
           </button>
         </div>
         <div className="col-6 p-0 d-flex justify-content-end align-items-center">
-          <input type="text" placeholder="Enter product type name" />
-          <button className="p-0" onClick={() => search()}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="126"
-              height="62"
-              viewBox="0 0 126 62"
-            >
-              <g
-                id="Search_Button"
-                data-name="Search Button"
-                transform="translate(-1516 -300)"
+          <form onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              placeholder="Enter product type name"
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+            />
+            <button className="p-0" type="submit">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="126"
+                height="62"
+                viewBox="0 0 126 62"
               >
-                <rect
-                  id="Rectangle_3"
-                  data-name="Rectangle 3"
-                  width="126"
-                  height="62"
-                  rx="5"
-                  transform="translate(1516 300)"
-                  fill="#00426b"
-                />
-                <text
-                  id="Search"
-                  transform="translate(1534 343)"
-                  fill="#ffcd00"
-                  font-size="30"
-                  font-family="SegoeUI-Semibold, Segoe UI"
-                  font-weight="600"
+                <g
+                  id="Search_Button"
+                  data-name="Search Button"
+                  transform="translate(-1516 -300)"
                 >
-                  <tspan x="0" y="0">
-                    Search
-                  </tspan>
-                </text>
-              </g>
-            </svg>
-          </button>
+                  <rect
+                    id="Rectangle_3"
+                    data-name="Rectangle 3"
+                    width="126"
+                    height="62"
+                    rx="5"
+                    transform="translate(1516 300)"
+                    fill="#00426b"
+                  />
+                  <text
+                    id="Search"
+                    transform="translate(1534 343)"
+                    fill="#ffcd00"
+                    font-size="30"
+                    font-family="SegoeUI-Semibold, Segoe UI"
+                    font-weight="600"
+                  >
+                    <tspan x="0" y="0">
+                      Search
+                    </tspan>
+                  </text>
+                </g>
+              </svg>
+            </button>
+          </form>
         </div>
         <div className="col-12 pt-5">
-          {noData && (
-            <div className="container main-container d-flex justify-content-center">
-              <h2>no Data</h2>
-            </div>
-          )}
           <table>
             <thead>
               <tr>
@@ -162,18 +158,18 @@ function InventoryTable() {
             <tbody>
               {types &&
                 types.map((type) => (
-                  <tr key={type.id}>
-                    <td onClick={() => handleRowClick(type.id, type.name)}>
+                  <tr key={type.Id}>
+                    <td onClick={() => handleRowClick(type.Id, type.Name)}>
                       {type.ID}
                     </td>
-                    <td onClick={() => handleRowClick(type.id, type.name)}>
+                    <td onClick={() => handleRowClick(type.Id, type.Name)}>
                       {type.Name}
                     </td>
-                    <td onClick={() => handleRowClick(type.id, type.name)}>
-                      {/* <img src={type.image} alt={type.name} /> */}
+                    <td onClick={() => handleRowClick(type.Id, type.Name)}>
+                      <img src={type.Image} alt={type.Name} />
                     </td>
-                    <td onClick={() => handleRowClick(type.id, type.name)}>
-                      {/* {type.counts} */}
+                    <td onClick={() => handleRowClick(type.Id, type.Name)}>
+                      {type.Counts}
                     </td>
                     <td>
                       <button data-bs-toggle="modal" data-bs-target="#editType">

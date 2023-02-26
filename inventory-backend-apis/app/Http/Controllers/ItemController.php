@@ -7,10 +7,21 @@ use App\Models\Item;
 
 class ItemController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::all();
-        return response()->json($items);
+
+        $items = Item::query();
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $items = $items->where('serial', 'LIKE', "%{$search}%");
+        }
+        
+        $items = $items->get();
+
+        return response()->json([
+            'data' => $items
+        ]);
     }
 
     public function show($id)

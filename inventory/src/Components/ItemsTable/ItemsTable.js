@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ItemsTable.scss";
 import AddItemPopup from "../AddItemPopup/AddItemPopup";
 import EditItemPopup from "../EditItemPopup/EditItemPopup";
+import axios from "axios";
 
 function ItemsTable(props) {
-    const [data, setData] = useState(props.data);
+
+    const [items, setItems] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+
     const handleSoldChange = (event, itemId) => {
       const updatedData = props.data.map((item) => {
         if (item.id === itemId) {
@@ -12,8 +16,33 @@ function ItemsTable(props) {
         }
         return item;
       });
-      setData(updatedData);
+      setItems(updatedData);
     };
+
+    const handleSearchInputChange = (event) => {
+      setSearchQuery(event.target.value);
+    };
+
+    const handleSearchSubmit = async (event) => {
+      event.preventDefault();
+      const response = await axios.get(
+        `http://localhost:8000/api/items?search=${searchQuery}`
+      );
+      setItems(response.data.data);
+    };
+
+    useEffect(() => {
+      axios
+        .get("http://localhost:8000/api/items")
+        .then((response) => {
+          setItems(response.data.data);
+          console.log(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, []);
+
   return (
     <>
       <div className="row d-flex justify-content-between table p-5">
@@ -118,16 +147,16 @@ function ItemsTable(props) {
               </tr>
             </thead>
             <tbody>
-              {data.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>{item.serial}</td>
+              {items.map((item) => (
+                <tr key={item.ID}>
+                  <td>{item.ID}</td>
+                  <td>{item.SerialNumber}</td>
                   <td>
                     <input
                       type="checkbox"
                       className="check"
-                      checked={item.sold}
-                      onChange={(event) => handleSoldChange(event, item.id)}
+                      checked={item.Sold}
+                      onChange={(event) => handleSoldChange(event, item.ID)}
                     />
                   </td>
                   <td>

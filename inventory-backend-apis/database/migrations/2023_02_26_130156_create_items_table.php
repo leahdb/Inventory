@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('serial');
             $table->boolean('sold');
             $table->foreign('product_type_id')->references('id')->on('producttypes')->onDelete('cascade');
+            $table->timestamps(false);
         });
     }
 

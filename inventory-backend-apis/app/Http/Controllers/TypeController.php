@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductType;
+use App\Models\Item;
 use Illuminate\Http\Request;
 
 class TypeController extends Controller
@@ -45,6 +46,9 @@ class TypeController extends Controller
     {
         $type = new ProductType();
         $type->name = $request->name;
+        $type->description = $request->description;
+        $type->image = $request->image;
+        //$type->count = $type->products->count();
 
         $type->save();
 
@@ -66,6 +70,9 @@ class TypeController extends Controller
         }
 
         $type->name = $request->name;
+        $type->description = $request->description;
+        $type->image = $request->image;
+        $type->count = $type->products->count();
 
         $type->save();
 
