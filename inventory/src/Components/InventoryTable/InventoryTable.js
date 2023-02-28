@@ -6,9 +6,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function InventoryTable() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
   const [types, setTypes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -17,6 +14,14 @@ function InventoryTable() {
   const handleRowClick = (id, name) => {
     navigate(`/items/${id}/${name}`);
     localStorage.setItem("name", name);
+    localStorage.setItem("id", id);
+  };
+
+  const handleButtonClick = (id, name, image, description) => {
+    localStorage.setItem("name", name);
+    localStorage.setItem("id", id);
+    localStorage.setItem("image", image);
+    localStorage.setItem("description", description);
   };
 
   const handleSearchInputChange = (event) => {
@@ -180,13 +185,28 @@ function InventoryTable() {
                       {type.Name}
                     </td>
                     <td onClick={() => handleRowClick(type.ID, type.Name)}>
-                      <img src={type.Image} alt={type.Name} />
+                      <img
+                        src={`http://127.0.0.1:8000${type.Image}`}
+                        alt={type.Name}
+                      />
                     </td>
                     <td onClick={() => handleRowClick(type.ID, type.Name)}>
                       {type.count}
                     </td>
                     <td>
-                      <button data-bs-toggle="modal" data-bs-target="#editType">
+                      <button
+                        onClick={() =>
+                          handleButtonClick(
+                            type.ID,
+                            type.Name,
+                            type.Image,
+                            type.Description
+                          )
+                        }
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editType"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="90"
@@ -336,7 +356,11 @@ function InventoryTable() {
         </div>
       </div>
       <AddTypePopup />
-      <EditTypePopup />
+      <EditTypePopup
+        image={`http://127.0.0.1:8000${localStorage.getItem("image")}`}
+        name={localStorage.getItem("name")}
+        description={localStorage.getItem("description")}
+      />
     </>
   );
 }

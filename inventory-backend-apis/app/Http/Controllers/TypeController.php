@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ProductType;
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use DB;
 
 class TypeController extends Controller
 {
@@ -47,8 +49,13 @@ class TypeController extends Controller
         $type = new ProductType();
         $type->name = $request->name;
         $type->description = $request->description;
-        $type->image = $request->image;
-        //$type->count = $type->products->count();
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $path = $image->store('public/images');
+            $url = Storage::url($path);
+            $type->image = $url;
+        }
 
         $type->save();
 
@@ -69,10 +76,25 @@ class TypeController extends Controller
             ], 404);
         }
 
+        // if (empty($request->name)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Name cannot be empty'
+        //     ], 400);
+        // }
+
         $type->name = $request->name;
         $type->description = $request->description;
-        $type->image = $request->image;
-        $type->count = $type->products->count();
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $path = $image->store('public/images');
+            $url = Storage::url($path);
+            $type->image = $url;
+        }
+
+        //Log::info("Name: $name, Description: $description, Image: $image");
+
 
         $type->save();
 
@@ -93,11 +115,13 @@ class TypeController extends Controller
             ], 404);
         }
 
+        //ProductType::destroy($id);
         $type->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'Product Type deleted successfully'
+            'message' => 'Product Type deleted successfully',
+            'data' => $type
         ]);
     }
 }

@@ -25,14 +25,14 @@ function ItemsTable(props) {
   const handleSearchSubmit = async (event) => {
     event.preventDefault();
     const response = await axios.get(
-      `http://localhost:8000/api/items?search=${searchQuery}`
+      `http://localhost:8000/api/items?search=${searchQuery}&id=${localStorage.getItem("id")}`
     );
     setItems(response.data.data);
   };
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/items")
+      .get(`http://localhost:8000/api/items?id=${localStorage.getItem("id")}`)
       .then((response) => {
         setItems(response.data.data);
         console.log(response.data.data);

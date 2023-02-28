@@ -12,9 +12,11 @@ class ItemController extends Controller
 
         $items = Item::query();
 
+        $items = $items->where('ProductitemID', $request->input('id'));
+
         if ($request->has('search')) {
             $search = $request->input('search');
-            $items = $items->where('serial', 'LIKE', "%{$search}%");
+            $items = $items->where('SerialNumber', 'LIKE', "%{$search}%");
         }
         
         $items = $items->get();
@@ -32,8 +34,16 @@ class ItemController extends Controller
 
     public function store(Request $request)
     {
-        $item = Item::create($request->all());
-        return response()->json($item, 201);
+        $item = new Item();
+        $item->SerialNumber = $request->serial;
+        $item->productTypeID = $request->pid;
+
+        $item->save();
+
+        return response()->json([
+            'success' => true,
+            'data' => $item
+        ]);
     }
 
     public function update(Request $request, $id)
